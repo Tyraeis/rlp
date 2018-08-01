@@ -173,6 +173,12 @@ fn encode_address() {
 	run_encode_tests(tests);
 }
 
+#[test]
+fn encode_tuple() {
+	run_encode_tests(vec![ETestPair((1u8, 2u8), vec![0xc2, 0x01, 0x02])]);
+	run_encode_tests(vec![ETestPair(("cat", "dog", 1u8), vec![0xc9, 0x83, b'c', b'a', b't', 0x83, b'd', b'o', b'g', 0x01])]);
+}
+
 /// Vec<u8> (Bytes) is treated as a single value
 #[test]
 fn encode_vector_u8() {
@@ -315,6 +321,12 @@ fn decode_untrusted_address() {
 							 0xb3, 0x7d, 0x11, 0x06])
 	];
 	run_decode_tests(tests);
+}
+
+#[test]
+fn decode_untrusted_tuple() {
+	run_decode_tests(vec![DTestPair((1u8, 2u8), vec![0xc2, 0x01, 0x02])]);
+	run_decode_tests(vec![DTestPair(("cat".to_owned(), "dog".to_owned(), 1u8), vec![0xc9, 0x83, b'c', b'a', b't', 0x83, b'd', b'o', b'g', 0x01])]);
 }
 
 #[test]

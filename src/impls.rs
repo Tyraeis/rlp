@@ -284,6 +284,137 @@ impl Decodable for String {
 	}
 }
 
+macro_rules! tuple_impls {
+	($(
+		($size:tt) {
+			$(($idx:tt) -> $T:ident)+
+		}
+	)+) => {
+		$(
+			impl<$($T:Encodable),+> Encodable for ($($T,)+) {
+				fn rlp_append(&self, s: &mut RlpStream) {
+					s.begin_list($size)
+						$(.append(&self.$idx))+;
+				}
+			}
+
+			impl<$($T:Decodable),+> Decodable for ($($T,)+) {
+				fn decode(rlp: &Rlp) -> Result<Self, DecoderError> {
+					#[allow(unused_parens)]
+					Ok(
+						($(rlp.val_at($idx)?),+)
+					)
+				}
+			}
+		)+
+	}
+}
+
+tuple_impls! {
+    (1) {
+        (0) -> A
+    }
+    (2) {
+        (0) -> A
+        (1) -> B
+    }
+    (3) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+    }
+    (4) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+    }
+    (5) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+    }
+    (6) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+    }
+    (7) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+    }
+    (8) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+    }
+    (9) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+        (8) -> I
+    }
+    (10) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+        (8) -> I
+        (9) -> J
+    }
+    (11) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+        (8) -> I
+        (9) -> J
+        (10) -> K
+    }
+    (12) {
+        (0) -> A
+        (1) -> B
+        (2) -> C
+        (3) -> D
+        (4) -> E
+        (5) -> F
+        (6) -> G
+        (7) -> H
+        (8) -> I
+        (9) -> J
+        (10) -> K
+        (11) -> L
+    }
+}
+
 impl<'a, T> Encodable for &'a T
 	where T: Encodable
 {
