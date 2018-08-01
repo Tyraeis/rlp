@@ -71,7 +71,7 @@ impl RlpStream {
 	/// 	assert_eq!(out, vec![0xc8, 0x83, b'c', b'a', b't', 0x83, b'd', b'o', b'g']);
 	/// }
 	/// ```
-	pub fn append<'a, E>(&'a mut self, value: &E) -> &'a mut Self where E: Encodable {
+	pub fn append<'a, E>(&'a mut self, value: E) -> &'a mut Self where E: Encodable {
 		self.finished_list = false;
 		value.rlp_append(self);
 		if !self.finished_list {

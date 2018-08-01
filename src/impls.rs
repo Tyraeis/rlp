@@ -283,3 +283,11 @@ impl Decodable for String {
 		})
 	}
 }
+
+impl<'a, T> Encodable for &'a T
+	where T: Encodable
+{
+	fn rlp_append(&self, s: &mut RlpStream) {
+		T::rlp_append(self, s);
+	}
+}
